@@ -1,0 +1,316 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="LifeLink Admin Portal — Platform statistics, donor verification, and user management.">
+  <title>Admin Portal — LifeLink</title>
+
+  <!-- Bootstrap 5 CSS -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+  <!-- Bootstrap Icons -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css" rel="stylesheet">
+  <!-- LifeLink Custom Styles -->
+  <link rel="stylesheet" href="/css/style.css">
+  <link rel="stylesheet" href="/css/dashboard.css">
+</head>
+<body>
+
+  <!-- Admin Navigation Bar -->
+  <nav class="navbar navbar-expand-lg navbar-dark admin-nav sticky-top shadow-sm">
+    <div class="container">
+      <a class="navbar-brand fw-bold d-flex align-items-center" href="/admin/dashboard.html">
+        <i class="bi bi-droplet-fill text-danger me-2 fs-4"></i>
+        <div>
+          <span class="logo-text text-white">LifeLink</span>
+          <span class="badge bg-warning text-dark ms-2" style="font-size: 0.65rem;">ADMIN PORTAL</span>
+        </div>
+      </a>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#adminNavbarContent" aria-controls="adminNavbarContent" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+
+      <div class="collapse navbar-collapse" id="adminNavbarContent">
+        <ul class="navbar-nav me-auto mb-2 mb-lg-0 ms-lg-4">
+          <li class="nav-item">
+            <a class="nav-link active fw-semibold" href="/admin/dashboard.html"><i class="bi bi-speedometer2 me-1"></i><span>Control Panel</span></a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="#pendingDonorsSection"><i class="bi bi-person-check me-1"></i><span>Pending Verification</span></a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="#allDonorsSection"><i class="bi bi-heart-pulse me-1"></i><span>Donor Overview</span></a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="#usersSection"><i class="bi bi-people me-1"></i><span>User Management</span></a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="#appointmentsSection"><i class="bi bi-calendar-check me-1"></i><span>Appointments</span></a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="#campsSection"><i class="bi bi-flag me-1"></i><span>Donation Camps</span></a>
+          </li>
+        </ul>
+
+        <div class="sidebar-actions d-flex align-items-center gap-3">
+          <span class="text-white small fw-semibold" id="adminName">Loading...</span>
+          <button class="btn btn-outline-light btn-sm" id="logoutBtn">
+            <i class="bi bi-box-arrow-right"></i><span>Logout</span>
+          </button>
+        </div>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Main Admin Portal Container -->
+  <main class="container my-4">
+
+    <!-- Alert Container -->
+    <div id="adminAlert"></div>
+
+    <!-- Header & Welcome Banner -->
+    <div class="d-flex flex-wrap align-items-center justify-content-between mb-4 gap-3">
+      <div>
+        <h1 class="h3 fw-bold mb-1 text-dark">
+          <i class="bi bi-shield-lock-fill text-danger me-2"></i>Platform Administration
+        </h1>
+        <p class="text-muted mb-0">Manage donor profile approvals, user accounts, and system operations.</p>
+      </div>
+      <div>
+        <button id="refreshAdminBtn" class="btn btn-outline-primary btn-sm fw-semibold">
+          <i class="bi bi-arrow-clockwise me-1"></i> Refresh Data
+        </button>
+      </div>
+    </div>
+
+    <!-- 1. Real System Metrics Overview Cards -->
+    <section class="mb-4">
+      <h3 class="h5 fw-bold mb-3 text-dark"><i class="bi bi-graph-up me-2 text-danger"></i>System Overview Metrics</h3>
+      <div class="row g-3">
+        <div class="col-lg-3 col-md-6 col-6">
+          <div class="stat-card p-3 text-center">
+            <div class="stat-number text-primary" id="statTotalUsers">0</div>
+            <div class="stat-label mt-1">Total Users</div>
+          </div>
+        </div>
+        <div class="col-lg-3 col-md-6 col-6">
+          <div class="stat-card p-3 text-center">
+            <div class="stat-number text-warning" id="statPendingDonors">0</div>
+            <div class="stat-label mt-1">Pending Verification</div>
+          </div>
+        </div>
+        <div class="col-lg-3 col-md-6 col-6">
+          <div class="stat-card p-3 text-center">
+            <div class="stat-number text-success" id="statVerifiedDonors">0</div>
+            <div class="stat-label mt-1">Verified Donors</div>
+          </div>
+        </div>
+        <div class="col-lg-3 col-md-6 col-6">
+          <div class="stat-card p-3 text-center">
+            <div class="stat-number text-danger" id="statActiveRequests">0</div>
+            <div class="stat-label mt-1">Active Requests</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 2. Pending Donor Verification Section -->
+    <section class="mb-5" id="pendingDonorsSection">
+      <div class="card shadow-sm border-0">
+        <div class="card-header bg-white border-bottom py-3 d-flex justify-content-between align-items-center">
+          <h3 class="h5 fw-bold mb-0 text-dark">
+            <i class="bi bi-person-exclamation text-warning me-2"></i>Pending Donor Verification Requests
+          </h3>
+          <span class="badge bg-warning text-dark" id="pendingBadgeCount">0 Pending</span>
+        </div>
+
+        <div class="card-body p-0">
+          <div id="pendingDonorsLoading" class="text-center py-4 d-none">
+            <div class="spinner-border text-primary" role="status"></div>
+            <p class="text-muted small mt-2">Loading pending donors...</p>
+          </div>
+
+          <div id="emptyPendingState" class="p-4 text-center text-muted d-none">
+            <i class="bi bi-check-circle-fill text-success fs-3 d-block mb-2"></i>
+            <span>No pending donor verification requests at this time.</span>
+          </div>
+
+          <div class="table-responsive" id="pendingDonorsTableContainer">
+            <table class="table table-hover align-middle mb-0">
+              <thead class="table-light">
+                <tr>
+                  <th>Donor Name</th>
+                  <th>Contact Email / Phone</th>
+                  <th>Blood Group</th>
+                  <th>Location Area</th>
+                  <th>Availability</th>
+                  <th>Applied Date</th>
+                  <th class="text-center">Verification Action</th>
+                </tr>
+              </thead>
+              <tbody id="pendingDonorsTbody">
+                <!-- Populated dynamically via admin.js -->
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 3. All Donors Overview Section -->
+    <section class="mb-5" id="allDonorsSection">
+      <div class="card shadow-sm border-0">
+        <div class="card-header bg-white border-bottom py-3 d-flex justify-content-between align-items-center">
+          <h3 class="h5 fw-bold mb-0 text-dark">
+            <i class="bi bi-heart-pulse text-danger me-2"></i>Donor Directory & Verification Status
+          </h3>
+          <span class="badge bg-secondary" id="totalDonorsBadge">0 Donors</span>
+        </div>
+
+        <div class="card-body p-0">
+          <div class="table-responsive">
+            <table class="table table-hover align-middle mb-0">
+              <thead class="table-light">
+                <tr>
+                  <th>Donor Name</th>
+                  <th>Blood Group</th>
+                  <th>Area</th>
+                  <th>Availability</th>
+                  <th>Verification Status</th>
+                  <th class="text-center">Admin Status Action</th>
+                </tr>
+              </thead>
+              <tbody id="allDonorsTbody">
+                <!-- Populated dynamically via admin.js -->
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 4. User Management Section -->
+    <section class="mb-5" id="usersSection">
+      <div class="card shadow-sm border-0">
+        <div class="card-header bg-white border-bottom py-3 d-flex justify-content-between align-items-center">
+          <h3 class="h5 fw-bold mb-0 text-dark">
+            <i class="bi bi-people-fill text-primary me-2"></i>User Account Management
+          </h3>
+          <span class="badge bg-primary" id="totalUsersBadge">0 Users</span>
+        </div>
+
+        <div class="card-body p-0">
+          <div class="table-responsive">
+            <table class="table table-hover align-middle mb-0">
+              <thead class="table-light">
+                <tr>
+                  <th>Name</th>
+                  <th>Email</th>
+                  <th>Phone</th>
+                  <th>Role</th>
+                  <th>Account Status</th>
+                  <th>Joined Date</th>
+                  <th class="text-center">Account Action</th>
+                </tr>
+              </thead>
+              <tbody id="usersTbody">
+                <!-- Populated dynamically via admin.js -->
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 5. Donation Camp Management -->
+    <section class="mb-5" id="campsSection">
+      <div class="card shadow-sm border-0">
+        <div class="card-header bg-white border-bottom py-3 d-flex justify-content-between align-items-center">
+          <div>
+            <h3 class="h5 fw-bold mb-1 text-dark"><i class="bi bi-flag-fill text-danger me-2"></i>Donation Camps</h3>
+            <p class="small text-muted mb-0">Publish upcoming camps for users to discover and book.</p>
+          </div>
+          <span class="badge bg-danger">Admin publishing</span>
+        </div>
+        <div id="campFormPanel">
+          <div class="card-body border-bottom">
+            <form id="campForm" novalidate>
+              <div class="row g-3">
+                <div class="col-md-6"><label class="form-label" for="campName">Camp name *</label><input id="campName" class="form-control" required maxlength="150"></div>
+                <div class="col-md-6"><label class="form-label" for="campEventDate">Event date *</label><input id="campEventDate" type="date" class="form-control" required></div>
+                <div class="col-md-6"><label class="form-label" for="campEventTime">Event time *</label><input id="campEventTime" type="time" class="form-control" required></div>
+                <div class="col-md-6"><label class="form-label" for="campAddress">Address *</label><input id="campAddress" class="form-control" required maxlength="300"></div>
+                <div class="col-md-6"><label class="form-label" for="campArea">Area *</label><input id="campArea" class="form-control" required maxlength="100"></div>
+                <div class="col-md-6"><label class="form-label" for="campCity">City *</label><input id="campCity" class="form-control" required maxlength="100"></div>
+                <div class="col-md-6"><label class="form-label" for="campPhone">Phone *</label><input id="campPhone" class="form-control" required></div>
+                <div class="col-md-6"><label class="form-label" for="campHours">Operating hours *</label><input id="campHours" class="form-control" placeholder="09:00 - 17:00" required></div>
+                <div class="col-md-6"><label class="form-label" for="campCapacity">Capacity *</label><input id="campCapacity" type="number" min="1" class="form-control" required></div>
+                <div class="col-12"><label class="form-label" for="campNotes">Notes</label><textarea id="campNotes" class="form-control" rows="2" maxlength="500"></textarea></div>
+              </div>
+              <div id="campFormAlert" class="mt-3"></div>
+              <button class="btn btn-danger mt-3" type="submit"><i class="bi bi-check-circle me-1"></i> Publish Camp</button>
+            </form>
+          </div>
+        </div>
+        <div class="card-body">
+          <div id="campsEmptyState" class="text-muted small">No donation camps have been published.</div>
+          <div class="table-responsive">
+            <table class="table table-hover align-middle mb-0">
+              <thead><tr><th>Camp</th><th>Location</th><th>Event date</th><th>Capacity</th><th>Status</th></tr></thead>
+              <tbody id="campsTbody"></tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 6. Donation Appointments Section (Phase 10) -->
+    <section class="mb-5" id="appointmentsSection">
+      <div class="card shadow-sm border-0">
+        <div class="card-header bg-white border-bottom py-3 d-flex justify-content-between align-items-center">
+          <h3 class="h5 fw-bold mb-0 text-dark">
+            <i class="bi bi-calendar-event-fill text-danger me-2"></i>Donation Appointments Management
+          </h3>
+          <span class="badge bg-danger" id="totalAppointmentsBadge">0 Appointments</span>
+        </div>
+
+        <div class="card-body p-0">
+          <div class="table-responsive">
+            <table class="table table-hover align-middle mb-0">
+              <thead class="table-light">
+                <tr>
+                  <th>Donor Details</th>
+                  <th>Centre & Location</th>
+                  <th>Date & Time</th>
+                  <th>Status</th>
+                  <th>Notes</th>
+                  <th class="text-center">Admin Action</th>
+                </tr>
+              </thead>
+              <tbody id="appointmentsTbody">
+                <!-- Populated dynamically via admin.js -->
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- Footer -->
+  <footer class="py-3 text-center text-muted small mt-auto">
+    <div class="container">
+      <p class="mb-1">&copy; 2026 LifeLink — Blood Donor Matching & Request Management System</p>
+      <p class="mb-0 text-secondary">Academic Administration Portal</p>
+    </div>
+  </footer>
+
+  <!-- Scripts -->
+  <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="/js/api.js"></script>
+  <script src="/js/auth.js"></script>
+  <script src="/js/admin.js"></script>
+</body>
+</html>

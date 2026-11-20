@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="LifeLink Donation Appointments — Manage your scheduled blood donation appointments.">
+  <title>Donation Appointments — LifeLink</title>
+
+  <!-- Bootstrap 5 CSS CDN -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+  <!-- Bootstrap Icons CDN -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css" rel="stylesheet">
+  
+  <!-- LifeLink Custom Styles -->
+  <link rel="stylesheet" href="../css/style.css">
+  <link rel="stylesheet" href="../css/dashboard.css">
+  <style>
+    .appointment-card {
+      border: 1px solid rgba(0,0,0,0.08);
+      border-radius: 12px;
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
+    }
+    .appointment-card:hover {
+      box-shadow: 0 6px 18px rgba(0,0,0,0.06);
+    }
+    .status-badge {
+      font-size: 0.8rem;
+      padding: 0.4rem 0.75rem;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Navigation Bar -->
+  <nav class="navbar navbar-expand-lg navbar-dark bg-dark sticky-top shadow-sm">
+    <div class="container">
+      <a class="navbar-brand d-flex align-items-center" href="/user/dashboard.html">
+        <i class="bi bi-droplet-fill text-danger me-2 fs-4"></i>
+        <div>
+          <span class="logo-text text-white">LifeLink</span>
+          <span class="logo-subtitle text-muted">Blood Donor & Request Management</span>
+        </div>
+      </a>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarContent" aria-controls="navbarContent" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+
+      <div class="collapse navbar-collapse" id="navbarContent">
+        <ul class="navbar-nav me-auto mb-2 mb-lg-0 ms-lg-4">
+          <li class="nav-item">
+            <a class="nav-link" href="/user/dashboard.html"><i class="bi bi-speedometer2 me-1"></i> Dashboard</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="/user/centres.html"><i class="bi bi-hospital me-1"></i> Blood Centres</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link active fw-semibold" href="/user/appointments.html"><i class="bi bi-calendar-check me-1"></i> Appointments</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="/user/requests.html"><i class="bi bi-list-task me-1"></i> Requests</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="/user/notifications.html">
+              <i class="bi bi-bell me-1"></i> Notifications
+              <span id="navUnreadBadge" class="badge bg-danger rounded-pill ms-1 d-none">0</span>
+            </a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="/user/profile.html"><i class="bi bi-person me-1"></i> Profile</a>
+          </li>
+        </ul>
+
+        <div class="d-flex align-items-center gap-3">
+          <a href="/user/centres.html" class="btn btn-danger btn-sm fw-semibold">
+            <i class="bi bi-plus-circle me-1"></i> Book New Appointment
+          </a>
+        </div>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Main Container -->
+  <main class="container my-5">
+
+    <!-- Page Header -->
+    <div class="d-flex flex-wrap align-items-center justify-content-between mb-4 gap-3">
+      <div>
+        <h1 class="h3 fw-bold mb-1 text-dark">
+          <i class="bi bi-calendar2-check-fill text-danger me-2"></i>Donation Appointments
+        </h1>
+        <p class="text-muted mb-0">Track your scheduled blood donation appointments and booking history.</p>
+      </div>
+      <div>
+        <a href="/user/centres.html" class="btn btn-danger fw-semibold px-4">
+          <i class="bi bi-hospital me-1"></i> Browse Centres & Book
+        </a>
+      </div>
+    </div>
+
+    <!-- Alert / Message Container -->
+    <div id="appointmentsAlert"></div>
+
+    <!-- Filter Pills / Tabs -->
+    <div class="d-flex flex-wrap align-items-center justify-content-between mb-4 gap-2">
+      <ul class="nav nav-pills" id="appointmentFilterTabs">
+        <li class="nav-item">
+          <button class="nav-link active fw-semibold" data-filter="ALL">All Appointments</button>
+        </li>
+        <li class="nav-item">
+          <button class="nav-link fw-semibold" data-filter="UPCOMING">Upcoming</button>
+        </li>
+        <li class="nav-item">
+          <button class="nav-link fw-semibold" data-filter="PAST">Past & Cancelled</button>
+        </li>
+      </ul>
+      <div class="text-muted small">
+        <span id="appointmentsCountLabel">0 appointments</span>
+      </div>
+    </div>
+
+    <!-- Loading State -->
+    <div id="appointmentsLoading" class="text-center py-5">
+      <div class="spinner-border text-danger" role="status" style="width: 3rem; height: 3rem;"></div>
+      <p class="text-muted mt-3 fs-6">Loading your appointments...</p>
+    </div>
+
+    <!-- Empty State -->
+    <div id="appointmentsEmpty" class="card shadow-sm border-0 p-5 text-center d-none">
+      <div class="text-muted mb-3" style="font-size: 3.5rem;">
+        <i class="bi bi-calendar-x"></i>
+      </div>
+      <h3 class="h5 fw-bold mb-2">No Appointments Found</h3>
+      <p class="text-muted mb-4" id="emptyMessageText">You have not scheduled any blood donation appointments yet.</p>
+      <div>
+        <a href="/user/centres.html" class="btn btn-danger fw-semibold px-4">
+          <i class="bi bi-hospital me-1"></i> Find a Donation Centre
+        </a>
+      </div>
+    </div>
+
+    <!-- Appointments Container (List/Cards) -->
+    <div class="row g-3" id="appointmentsContainer">
+      <!-- Populated dynamically via appointments.js -->
+    </div>
+
+  </main>
+
+  <!-- ================================================================
+       Cancel Appointment Confirmation Modal
+       ================================================================ -->
+  <div class="modal fade" id="cancelAppointmentModal" tabindex="-1" aria-labelledby="cancelModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content shadow">
+        <div class="modal-header bg-dark text-white">
+          <h5 class="modal-title fw-bold" id="cancelModalLabel">
+            <i class="bi bi-exclamation-circle text-danger me-2"></i>Confirm Appointment Cancellation
+          </h5>
+          <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body py-4">
+          <input type="hidden" id="cancelAppointmentId">
+          <p class="mb-2 fs-6">Are you sure you want to cancel this donation appointment?</p>
+          <div class="card bg-light border-0 p-3 mb-3">
+            <div class="fw-bold text-dark" id="cancelCentreName">Centre Name</div>
+            <div class="small text-muted" id="cancelDateTime">Date & Time</div>
+          </div>
+          <div class="alert alert-warning small mb-0">
+            <i class="bi bi-info-circle me-1"></i> Cancelled appointments cannot be un-cancelled. You will need to book a new appointment if your plans change.
+          </div>
+        </div>
+        <div class="modal-footer bg-light">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Keep Appointment</button>
+          <button type="button" class="btn btn-danger fw-semibold px-4" id="confirmCancelBtn">
+            <span class="spinner-border spinner-border-sm me-1 d-none" id="cancelSpinner" role="status"></span>
+            Cancel Appointment
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Footer -->
+  <footer class="py-4 text-center text-muted small mt-auto border-top">
+    <div class="container">
+      <p class="mb-1">&copy; 2026 LifeLink — Blood Donor Matching & Request Management System</p>
+      <p class="mb-0 text-secondary">Academic Capstone Prototype</p>
+    </div>
+  </footer>
+
+  <!-- Scripts -->
+  <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="../js/api.js"></script>
+  <script src="../js/auth.js"></script>
+  <script src="../js/appointments.js"></script>
+</body>
+</html>

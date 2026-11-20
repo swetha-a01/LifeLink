@@ -1,0 +1,219 @@
+/* LifeLink dashboard and shared application components. */
+:root {
+  --primary-red: var(--ll-burgundy);
+  --dark-red: var(--ll-burgundy-dark);
+  --light-red: var(--ll-blush);
+  --bg-light: var(--ll-background);
+  --text-dark: var(--ll-text);
+  --text-muted: var(--ll-text-secondary);
+  --border-color: var(--ll-border);
+  --card-shadow: var(--ll-shadow-card);
+  --card-shadow-hover: 0 8px 24px rgba(128, 15, 47, 0.1);
+}
+
+body {
+  display: flex;
+  flex-direction: column;
+}
+
+.welcome-card {
+  border-left: 4px solid var(--ll-burgundy) !important;
+  background: linear-gradient(120deg, #fff 0%, #fff5f7 100%);
+}
+
+.welcome-title,
+.stat-number {
+  color: var(--ll-text);
+}
+
+.welcome-tagline {
+  color: var(--ll-burgundy);
+  font-weight: 600;
+}
+
+.action-card,
+.stat-card,
+.blood-group-card,
+.emergency-card,
+.quick-nav-card {
+  background: var(--ll-surface);
+  border: 1px solid var(--ll-border) !important;
+  border-radius: var(--ll-radius-md);
+  box-shadow: var(--card-shadow);
+}
+
+.dashboard-vertical-nav {
+  display: flex;
+  flex-direction: column;
+  gap: 0.65rem;
+  max-width: 760px;
+}
+
+.dashboard-vertical-link {
+  display: flex;
+  align-items: center;
+  gap: 0.9rem;
+  padding: 0.9rem 1rem;
+  border: 1px solid var(--ll-border);
+  border-radius: var(--ll-radius-md);
+  background: var(--ll-surface);
+  color: var(--ll-text);
+  text-decoration: none;
+  box-shadow: var(--card-shadow);
+  transition: border-color 160ms ease, background-color 160ms ease, transform 160ms ease;
+}
+
+.dashboard-vertical-link > i:first-child {
+  width: 1.5rem;
+  color: var(--ll-burgundy);
+  font-size: 1.1rem;
+  text-align: center;
+}
+
+.dashboard-vertical-link > i:last-child {
+  margin-left: auto;
+  color: var(--ll-text-secondary);
+}
+
+.dashboard-vertical-link span {
+  display: flex;
+  flex-direction: column;
+}
+
+.dashboard-vertical-link small {
+  color: var(--ll-text-secondary);
+}
+
+.dashboard-vertical-link:hover {
+  border-color: var(--ll-rose);
+  background: var(--ll-blush);
+  color: var(--ll-burgundy);
+  transform: translateX(3px);
+}
+
+.dashboard-vertical-link-emergency {
+  border-color: rgba(180, 35, 54, 0.3);
+}
+
+.dashboard-vertical-link-emergency > i:first-child {
+  color: var(--ll-danger);
+}
+
+.action-card {
+  height: 100%;
+  transition: transform 160ms ease, box-shadow 160ms ease;
+}
+
+.action-card:hover,
+.quick-nav-card:hover {
+  box-shadow: var(--card-shadow-hover);
+  transform: translateY(-2px);
+}
+
+.action-card-request {
+  border-top: 3px solid var(--ll-burgundy) !important;
+}
+
+.action-card-donate {
+  border-top: 3px solid var(--ll-success) !important;
+}
+
+.action-icon {
+  color: var(--ll-burgundy) !important;
+  font-size: 2.25rem;
+}
+
+.stat-card {
+  min-height: 112px;
+  transition: transform 160ms ease;
+}
+
+.stat-card:hover {
+  transform: translateY(-2px);
+}
+
+.stat-number {
+  color: var(--ll-burgundy) !important;
+  font-size: 2rem;
+  font-weight: 700;
+  line-height: 1.2;
+}
+
+.stat-label {
+  color: var(--ll-text-secondary);
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+.blood-group-card {
+  padding: 1rem;
+  text-align: center;
+}
+
+.blood-group-badge {
+  display: inline-block;
+  width: 48px;
+  height: 48px;
+  margin-bottom: 0.5rem;
+  border-radius: 50%;
+  background: var(--ll-blush);
+  color: var(--ll-burgundy);
+  font-size: 1.1rem;
+  font-weight: 700;
+  line-height: 48px;
+}
+
+.blood-group-count {
+  color: var(--ll-text);
+  font-size: 1.35rem;
+  font-weight: 700;
+}
+
+.quick-nav-card {
+  display: block;
+  padding: 1.25rem;
+  color: var(--ll-text);
+  text-decoration: none;
+  transition: transform 160ms ease, box-shadow 160ms ease;
+}
+
+.quick-nav-card:hover {
+  color: var(--ll-burgundy);
+}
+
+.quick-nav-icon {
+  color: var(--ll-burgundy);
+  font-size: 1.7rem;
+}
+
+.disclaimer-banner {
+  border: 1px solid #ecd9a8;
+  border-radius: var(--ll-radius-sm);
+  background: #fff9e8;
+  color: #6e5010;
+  font-size: 0.85rem;
+  padding: 0.85rem 1.25rem;
+}
+
+.admin-nav .badge {
+  background: var(--ll-blush) !important;
+  color: var(--ll-burgundy) !important;
+}
+
+.status-badge {
+  font-size: 0.78rem;
+  padding: 0.4rem 0.7rem;
+}
+
+@media (max-width: 575.98px) {
+  .welcome-card,
+  .action-card {
+    text-align: left;
+  }
+
+  .card-body {
+    padding: 1.1rem !important;
+  }
+}

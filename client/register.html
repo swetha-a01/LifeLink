@@ -1,0 +1,348 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Create your LifeLink account — find blood donors and request blood when needed.">
+  <title>Register — LifeLink</title>
+
+  <!-- Bootstrap 5 CSS -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+  <!-- Bootstrap Icons -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css" rel="stylesheet">
+  <!-- LifeLink Styles -->
+  <link rel="stylesheet" href="/css/style.css">
+  <link rel="stylesheet" href="/css/auth.css">
+</head>
+<body class="auth-page">
+
+  <div class="auth-container">
+    <!-- Branding -->
+    <div class="auth-brand">
+      <a href="/" class="text-decoration-none">
+        <h1 class="brand-logo">
+          <i class="bi bi-droplet-fill"></i> LifeLink
+        </h1>
+      </a>
+      <p class="brand-tagline">Connecting Potential Donors with Those in Need</p>
+    </div>
+
+    <!-- Register Card -->
+    <div class="auth-card">
+      <h2 class="auth-title">Create Account</h2>
+      <p class="auth-subtitle">Join LifeLink to find blood donors or donate blood</p>
+
+      <!-- Alert container for success/error messages -->
+      <div id="alertContainer"></div>
+
+      <form id="registerForm" novalidate>
+        <!-- Full Name -->
+        <div class="mb-3">
+          <label for="name" class="form-label">Full Name</label>
+          <div class="input-group">
+            <span class="input-group-text"><i class="bi bi-person"></i></span>
+            <input
+              type="text"
+              class="form-control"
+              id="name"
+              name="name"
+              placeholder="Enter your full name"
+              required
+              minlength="2"
+              maxlength="100"
+            >
+          </div>
+          <div class="invalid-feedback" id="nameError"></div>
+        </div>
+
+        <!-- Email -->
+        <div class="mb-3">
+          <label for="email" class="form-label">Email Address</label>
+          <div class="input-group">
+            <span class="input-group-text"><i class="bi bi-envelope"></i></span>
+            <input
+              type="email"
+              class="form-control"
+              id="email"
+              name="email"
+              placeholder="Enter your email"
+              required
+            >
+          </div>
+          <div class="invalid-feedback" id="emailError"></div>
+        </div>
+
+        <!-- Phone -->
+        <div class="mb-3">
+          <label for="phone" class="form-label">Phone Number</label>
+          <div class="input-group">
+            <span class="input-group-text"><i class="bi bi-telephone"></i></span>
+            <input
+              type="tel"
+              class="form-control"
+              id="phone"
+              name="phone"
+              placeholder="Enter your phone number"
+              required
+            >
+          </div>
+          <div class="invalid-feedback" id="phoneError"></div>
+        </div>
+
+        <!-- Date of Birth -->
+        <div class="mb-3">
+          <label for="dateOfBirth" class="form-label">Date of Birth</label>
+          <div class="input-group">
+            <span class="input-group-text"><i class="bi bi-calendar"></i></span>
+            <input type="date" class="form-control" id="dateOfBirth" name="dateOfBirth" required>
+          </div>
+          <div class="invalid-feedback" id="dateOfBirthError"></div>
+        </div>
+
+        <!-- Password -->
+        <div class="mb-3">
+          <label for="password" class="form-label">Password</label>
+          <div class="input-group">
+            <span class="input-group-text"><i class="bi bi-lock"></i></span>
+            <input
+              type="password"
+              class="form-control has-toggle"
+              id="password"
+              name="password"
+              placeholder="Create a password"
+              required
+              minlength="6"
+            >
+            <button class="toggle-password" type="button" data-target="password" title="Show password">
+              <i class="bi bi-eye"></i>
+            </button>
+          </div>
+          <div class="password-requirements mt-1">
+            <small>Min 6 characters, 1 uppercase, 1 lowercase, 1 number, 1 special character (!@#$%^&*)</small>
+          </div>
+          <div class="invalid-feedback" id="passwordError"></div>
+        </div>
+
+        <!-- Confirm Password -->
+        <div class="mb-4">
+          <label for="confirmPassword" class="form-label">Confirm Password</label>
+          <div class="input-group">
+            <span class="input-group-text"><i class="bi bi-lock-fill"></i></span>
+            <input
+              type="password"
+              class="form-control has-toggle"
+              id="confirmPassword"
+              name="confirmPassword"
+              placeholder="Confirm your password"
+              required
+            >
+            <button class="toggle-password" type="button" data-target="confirmPassword" title="Show password">
+              <i class="bi bi-eye"></i>
+            </button>
+          </div>
+          <div class="invalid-feedback" id="confirmPasswordError"></div>
+        </div>
+
+        <!-- Submit Button -->
+        <button type="submit" class="btn btn-danger w-100 btn-auth" id="registerBtn">
+          <span class="btn-text">Create Account</span>
+          <span class="spinner-border spinner-border-sm d-none ms-2" id="registerSpinner" role="status"></span>
+        </button>
+      </form>
+
+      <!-- Login link -->
+      <div class="auth-footer">
+        <p>Already have an account? <a href="/login.html">Login</a></p>
+      </div>
+    </div>
+  </div>
+
+  <!-- jQuery -->
+  <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+  <!-- Bootstrap 5 JS -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+  <!-- LifeLink JS -->
+  <script src="/js/api.js"></script>
+  <script src="/js/auth.js"></script>
+
+  <script>
+    /**
+     * Registration Page Logic
+     *
+     * Flow:
+     *   1. User fills the form.
+     *   2. Client-side validation runs on submit.
+     *   3. If valid, jQuery AJAX sends POST /api/auth/register with JSON body.
+     *   4. On success: show success message, redirect to login page.
+     *   5. On error: show the server's error message.
+     */
+    $(document).ready(function () {
+
+      // If user is already logged in, redirect to dashboard
+      Auth.requireGuest();
+
+      // ---- Toggle password visibility ----
+      $('.toggle-password').on('click', function () {
+        var targetId = $(this).data('target');
+        var input = $('#' + targetId);
+        var icon = $(this).find('i');
+
+        if (input.attr('type') === 'password') {
+          input.attr('type', 'text');
+          icon.removeClass('bi-eye').addClass('bi-eye-slash');
+        } else {
+          input.attr('type', 'password');
+          icon.removeClass('bi-eye-slash').addClass('bi-eye');
+        }
+      });
+
+      // ---- Clear validation errors when user starts typing ----
+      $('input').on('input', function () {
+        $(this).removeClass('is-invalid is-valid');
+        $(this).closest('.mb-3, .mb-4').find('.invalid-feedback').text('');
+      });
+
+      // ---- Form submit ----
+      $('#registerForm').on('submit', function (e) {
+        e.preventDefault();
+
+        // Clear previous alerts
+        Auth.clearAlerts('alertContainer');
+
+        // Collect form values
+        var name = $.trim($('#name').val());
+        var email = $.trim($('#email').val());
+        var phone = $.trim($('#phone').val());
+        var dateOfBirth = $('#dateOfBirth').val();
+        var password = $('#password').val();
+        var confirmPassword = $('#confirmPassword').val();
+
+        // ---- Client-side validation ----
+        var isValid = true;
+
+        // Name validation
+        if (!name) {
+          showFieldError('name', 'nameError', 'Name is required');
+          isValid = false;
+        } else if (name.length < 2) {
+          showFieldError('name', 'nameError', 'Name must be at least 2 characters');
+          isValid = false;
+        }
+
+        // Email validation
+        var emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        if (!email) {
+          showFieldError('email', 'emailError', 'Email is required');
+          isValid = false;
+        } else if (!emailPattern.test(email)) {
+          showFieldError('email', 'emailError', 'Please enter a valid email address');
+          isValid = false;
+        }
+
+        // Phone validation (10-15 digits)
+        var phonePattern = /^[0-9]{10,15}$/;
+        if (!phone) {
+          showFieldError('phone', 'phoneError', 'Phone number is required');
+          isValid = false;
+        } else if (!phonePattern.test(phone)) {
+          showFieldError('phone', 'phoneError', 'Phone must be 10 to 15 digits');
+          isValid = false;
+        }
+
+        if (!dateOfBirth) {
+          showFieldError('dateOfBirth', 'dateOfBirthError', 'Date of birth is required');
+          isValid = false;
+        } else if (new Date(dateOfBirth) > new Date()) {
+          showFieldError('dateOfBirth', 'dateOfBirthError', 'Date of birth cannot be in the future');
+          isValid = false;
+        }
+
+        // Password validation
+        if (!password) {
+          showFieldError('password', 'passwordError', 'Password is required');
+          isValid = false;
+        } else if (password.length < 6) {
+          showFieldError('password', 'passwordError', 'Password must be at least 6 characters');
+          isValid = false;
+        } else if (!/[A-Z]/.test(password)) {
+          showFieldError('password', 'passwordError', 'Must contain at least one uppercase letter');
+          isValid = false;
+        } else if (!/[a-z]/.test(password)) {
+          showFieldError('password', 'passwordError', 'Must contain at least one lowercase letter');
+          isValid = false;
+        } else if (!/[0-9]/.test(password)) {
+          showFieldError('password', 'passwordError', 'Must contain at least one number');
+          isValid = false;
+        } else if (!/[!@#$%^&*]/.test(password)) {
+          showFieldError('password', 'passwordError', 'Must contain at least one special character (!@#$%^&*)');
+          isValid = false;
+        }
+
+        // Confirm password
+        if (!confirmPassword) {
+          showFieldError('confirmPassword', 'confirmPasswordError', 'Please confirm your password');
+          isValid = false;
+        } else if (password !== confirmPassword) {
+          showFieldError('confirmPassword', 'confirmPasswordError', 'Passwords do not match');
+          isValid = false;
+        }
+
+        if (!isValid) return;
+
+        // ---- Send registration request ----
+        setLoading(true);
+
+        LifeLinkAPI.post('/auth/register', {
+          name: name,
+          email: email,
+          phone: phone,
+          dateOfBirth: dateOfBirth,
+          password: password
+        })
+          .then(function (response) {
+            setLoading(false);
+
+            // Show success message
+            Auth.showNativeAlert(
+              'alertContainer',
+              '<strong>Registration successful!</strong> Redirecting to login page...',
+              'success'
+            );
+
+            // Redirect to login after 2 seconds
+            setTimeout(function () {
+              window.location.href = '/login.html';
+            }, 2000);
+          })
+          .catch(function (error) {
+            setLoading(false);
+            Auth.showNativeAlert('alertContainer', error.message || 'Registration failed.', 'danger');
+          });
+      });
+
+      // ---- Helper: Show a field-level validation error ----
+      function showFieldError(fieldId, errorId, message) {
+        $('#' + fieldId).addClass('is-invalid');
+        $('#' + errorId).text(message).show();
+      }
+
+      // ---- Helper: Toggle loading state on submit button ----
+      function setLoading(loading) {
+        var btn = $('#registerBtn');
+        var spinner = $('#registerSpinner');
+        var btnText = btn.find('.btn-text');
+
+        if (loading) {
+          btn.prop('disabled', true);
+          btnText.text('Creating Account...');
+          spinner.removeClass('d-none');
+        } else {
+          btn.prop('disabled', false);
+          btnText.text('Create Account');
+          spinner.addClass('d-none');
+        }
+      }
+    });
+  </script>
+</body>
+</html>

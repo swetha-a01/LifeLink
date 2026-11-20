@@ -1,0 +1,376 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="LifeLink User Dashboard — manage blood requests, donor profiles, and potential matches.">
+  <title>User Dashboard — LifeLink</title>
+
+  <!-- Bootstrap 5 CSS CDN -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+  <!-- Bootstrap Icons CDN -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css" rel="stylesheet">
+  
+  <!-- LifeLink Custom Styles -->
+  <link rel="stylesheet" href="../css/style.css">
+  <link rel="stylesheet" href="../css/dashboard.css">
+</head>
+<body>
+
+  <!-- ================================================================
+       Top Navigation Bar
+       ================================================================ -->
+  <nav class="navbar navbar-expand-lg navbar-dark bg-dark sticky-top shadow-sm">
+    <div class="container">
+      <a class="navbar-brand d-flex align-items-center" href="/user/dashboard.html">
+        <i class="bi bi-droplet-fill text-danger me-2 fs-4"></i>
+        <div>
+          <span class="logo-text text-white">LifeLink</span>
+          <span class="logo-subtitle text-muted">Blood Donor & Request Management</span>
+        </div>
+      </a>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarContent" aria-controls="navbarContent" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+
+      <div class="collapse navbar-collapse" id="navbarContent">
+        <ul class="navbar-nav me-auto mb-2 mb-lg-0 ms-lg-4">
+          <li class="nav-item">
+            <a class="nav-link active fw-semibold" href="/user/dashboard.html"><i class="bi bi-speedometer2 me-1"></i> Dashboard</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="/user/centres.html"><i class="bi bi-hospital me-1"></i> Blood Centres</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="/user/appointments.html"><i class="bi bi-calendar-check me-1"></i> Appointments</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="/user/requests.html"><i class="bi bi-list-task me-1"></i> Requests</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="/user/notifications.html">
+              <i class="bi bi-bell me-1"></i> Notifications
+              <span id="navUnreadBadge" class="badge bg-danger rounded-pill ms-1 d-none">0</span>
+            </a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="/user/profile.html"><i class="bi bi-person me-1"></i> Profile</a>
+          </li>
+        </ul>
+
+        <div class="d-flex align-items-center gap-3">
+          <div class="text-light d-none d-sm-block">
+            <i class="bi bi-person-circle text-danger me-1"></i>
+            <span id="navUserName" class="fw-semibold">Loading...</span>
+          </div>
+          <button type="button" class="btn btn-outline-danger btn-sm" data-bs-toggle="modal" data-bs-target="#logoutModal">
+            <i class="bi bi-box-arrow-right me-1"></i> Logout
+          </button>
+        </div>
+      </div>
+    </div>
+  </nav>
+
+  <!-- ================================================================
+       Main Dashboard Content
+       ================================================================ -->
+  <main class="container my-4">
+
+    <!-- 1. Welcome Section -->
+    <section class="mb-4">
+      <div class="card welcome-card p-4 shadow-sm">
+        <div class="row align-items-center">
+          <div class="col-md-9">
+            <h2 class="welcome-title h3 mb-2">
+              Welcome back, <span id="welcomeUserName" class="text-danger">User</span>!
+            </h2>
+            <p class="welcome-tagline fs-5 mb-1">Find blood. Donate blood. Save lives.</p>
+            <p class="text-secondary mb-0">Connect with potential donors and manage your blood requests in one place.</p>
+          </div>
+          <div class="col-md-3 text-end d-none d-md-block">
+            <i class="bi bi-heart-pulse-fill text-danger opacity-25" style="font-size: 4.5rem;"></i>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 2. Main Action Cards -->
+    <section class="mb-4">
+      <div class="row g-3">
+        <!-- Request Blood Card -->
+        <div class="col-md-6">
+          <div class="card action-card action-card-request p-4 shadow-sm text-center text-md-start">
+            <div class="d-md-flex align-items-center gap-3">
+              <div class="action-icon text-danger mb-3 mb-md-0">🩸</div>
+              <div class="flex-grow-1">
+                <h3 class="h4 fw-bold mb-1">Request Blood</h3>
+                <p class="text-muted mb-3">Create a blood request and find potential donors.</p>
+                <a href="/user/request.html" class="btn btn-danger fw-semibold px-4">
+                  <i class="bi bi-plus-circle me-1"></i> Request Blood
+                </a>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Donate Blood Card -->
+        <div class="col-md-6">
+          <div class="card action-card action-card-donate p-4 shadow-sm text-center text-md-start">
+            <div class="d-md-flex align-items-center gap-3">
+              <div class="action-icon text-success mb-3 mb-md-0">❤️</div>
+              <div class="flex-grow-1">
+                <h3 class="h4 fw-bold mb-1">Donate Blood</h3>
+                <p class="text-muted mb-3" id="donateBloodActionDesc">Create or update your donor profile and help someone in need.</p>
+                <a href="/user/donor.html" class="btn btn-success fw-semibold px-4" id="donateBloodActionBtn">
+                  <i class="bi bi-heart me-1"></i> Donate Blood
+                </a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 3. Quick Statistics Section -->
+    <section class="mb-4">
+      <h3 class="h5 fw-bold mb-3 text-dark">
+        <i class="bi bi-graph-up text-danger me-2"></i>Quick Overview
+      </h3>
+      <div class="row g-3">
+        <!-- Active Requests -->
+        <div class="col-lg-3 col-md-6 col-6">
+          <div class="stat-card p-3 text-center">
+            <div class="stat-number" id="activeRequestsCount">0</div>
+            <div class="stat-label mt-1">Active Requests</div>
+          </div>
+        </div>
+
+        <!-- Potential Matches -->
+        <div class="col-lg-3 col-md-6 col-6">
+          <div class="stat-card p-3 text-center">
+            <div class="stat-number text-danger" id="potentialMatchesCount">0</div>
+            <div class="stat-label mt-1">Potential Matches</div>
+          </div>
+        </div>
+
+        <!-- Donations -->
+        <div class="col-lg-3 col-md-6 col-6">
+          <div class="stat-card p-3 text-center">
+            <div class="stat-number" id="donationsCount">0</div>
+            <div class="stat-label mt-1">Donations</div>
+          </div>
+        </div>
+
+        <!-- Appointments -->
+        <div class="col-lg-3 col-md-6 col-6">
+          <div class="stat-card p-3 text-center">
+            <div class="stat-number" id="appointmentsCount">0</div>
+            <div class="stat-label mt-1">Appointments</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Upcoming Donation Appointment Section (Phase 10) -->
+    <section class="mb-4" id="upcomingAppointmentSection">
+      <div class="card border-0 shadow-sm">
+        <div class="card-header bg-white border-bottom py-3 d-flex justify-content-between align-items-center">
+          <h3 class="h5 fw-bold mb-0 text-dark">
+            <i class="bi bi-calendar-event text-danger me-2"></i>Next Scheduled Donation Appointment
+          </h3>
+          <a href="/user/appointments.html" class="btn btn-outline-danger btn-sm fw-semibold">
+            Manage Appointments <i class="bi bi-arrow-right ms-1"></i>
+          </a>
+        </div>
+        <div class="card-body p-4" id="upcomingAppointmentContent">
+          <!-- Populated dynamically via dashboard.js -->
+          <div class="text-center py-2 text-muted">
+            <div class="spinner-border spinner-border-sm text-danger me-2" role="status"></div>
+            <span>Checking scheduled appointments...</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 4. Potential Donor Availability Section -->
+    <section class="mb-4">
+      <div class="d-flex align-items-center justify-content-between mb-3">
+        <h3 class="h5 fw-bold mb-0 text-dark">
+          <i class="bi bi-pie-chart text-danger me-2"></i>Potential Donor Availability
+        </h3>
+        <span class="badge bg-light text-secondary border">Demo Data</span>
+      </div>
+
+      <!-- Blood Group Availability Grid -->
+      <div class="row g-3" id="bloodAvailabilityGrid">
+        <!-- Populated dynamically by dashboard.js -->
+      </div>
+      <p class="text-muted small mt-2">
+        <i class="bi bi-info-circle me-1"></i> Availability represents potential registered donors and will be connected to live database data.
+      </p>
+    </section>
+
+    <!-- 5. Emergency Requests Section -->
+    <section class="mb-4">
+      <div class="d-flex align-items-center justify-content-between mb-3">
+        <h3 class="h5 fw-bold mb-0 text-dark">
+          <i class="bi bi-exclamation-triangle-fill text-danger me-2"></i>Emergency Blood Requests
+        </h3>
+        <a href="/user/emergency-requests.html" class="btn btn-outline-danger btn-sm fw-semibold">
+          View All Requests <i class="bi bi-arrow-right ms-1"></i>
+        </a>
+      </div>
+
+      <div class="row g-3" id="dashboardEmergencyRequests">
+        <div class="col-12 text-muted small">Loading emergency requests...</div>
+      </div>
+    </section>
+
+    <!-- 6. My Activity & Profile Summary Section -->
+    <section class="mb-4">
+      <div class="row g-3">
+        <!-- My Activity Table (Left 8 cols) -->
+        <div class="col-lg-8">
+          <div class="card border-0 shadow-sm h-100">
+            <div class="card-header bg-white border-bottom py-3">
+              <h3 class="h5 fw-bold mb-0 text-dark">
+                <i class="bi bi-clock-history text-danger me-2"></i>My Activity
+              </h3>
+            </div>
+            <div class="card-body p-0">
+              <div class="table-responsive">
+                <table class="table table-hover align-middle mb-0">
+                  <thead class="table-light">
+                    <tr>
+                      <th>Type</th>
+                      <th>Details</th>
+                      <th>Date</th>
+                      <th>Status</th>
+                    </tr>
+                  </thead>
+                  <tbody id="dashboardActivityBody">
+                    <tr>
+                      <td><span class="badge bg-danger-subtle text-danger border border-danger-subtle">Blood Request</span></td>
+                      <td class="fw-semibold">O+ blood request</td>
+                      <td class="text-muted small">Demo</td>
+                      <td><span class="badge bg-warning text-dark">Searching</span></td>
+                    </tr>
+                    <tr>
+                      <td><span class="badge bg-success-subtle text-success border border-success-subtle">Donation</span></td>
+                      <td class="fw-semibold">Blood donation</td>
+                      <td class="text-muted small">Demo</td>
+                      <td><span class="badge bg-success">Completed</span></td>
+                    </tr>
+                    <tr>
+                      <td><span class="badge bg-primary-subtle text-primary border border-primary-subtle">Appointment</span></td>
+                      <td class="fw-semibold">Donation centre appointment</td>
+                      <td class="text-muted small">Demo</td>
+                      <td><span class="badge bg-info text-dark">Booked</span></td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+            <div class="card-footer bg-light border-0 py-2">
+              <small class="text-muted">
+                <i class="bi bi-info-circle me-1"></i> Activity records will be loaded from MongoDB in future phases.
+              </small>
+            </div>
+          </div>
+        </div>
+
+        <!-- Profile Summary (Right 4 cols) -->
+        <div class="col-lg-4">
+          <div class="card border-0 shadow-sm h-100">
+            <div class="card-header bg-white border-bottom py-3">
+              <h3 class="h5 fw-bold mb-0 text-dark">
+                <i class="bi bi-person-badge text-danger me-2"></i>Profile Summary
+              </h3>
+            </div>
+            <div class="card-body">
+              <div class="mb-3 text-center">
+                <div class="avatar-placeholder bg-light text-danger rounded-circle d-inline-flex align-items-center justify-content-center mb-2" style="width: 60px; height: 60px; font-size: 1.8rem; border: 2px solid var(--primary-red);">
+                  <i class="bi bi-person"></i>
+                </div>
+                <h4 class="h6 fw-bold text-dark mb-0" id="profileName">Loading...</h4>
+                <span class="badge bg-success mt-1" id="profileStatus">ACTIVE</span>
+              </div>
+              <ul class="list-group list-group-flush small border-top pt-2">
+                <li class="list-group-item d-flex justify-content-between px-0">
+                  <span class="text-muted">Email:</span>
+                  <span class="fw-semibold text-dark text-break ms-2" id="profileEmail">Loading...</span>
+                </li>
+                <li class="list-group-item d-flex justify-content-between px-0">
+                  <span class="text-muted">Phone:</span>
+                  <span class="fw-semibold text-dark" id="profilePhone">Loading...</span>
+                </li>
+                <li class="list-group-item d-flex justify-content-between px-0">
+                  <span class="text-muted">Role:</span>
+                  <span class="fw-semibold text-dark" id="profileRole">USER</span>
+                </li>
+                <li class="list-group-item d-flex justify-content-between px-0">
+                  <span class="text-muted">Donor Status:</span>
+                  <span class="badge bg-secondary" id="dashboardDonorStatus">Loading...</span>
+                </li>
+              </ul>
+              <div class="mt-3 text-center">
+                <a href="/user/profile.html" class="btn btn-outline-danger btn-sm w-100 fw-semibold">
+                  <i class="bi bi-pencil-square me-1"></i> Edit Profile
+                </a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 8. Academic Medical Safety Disclaimer Banner -->
+    <section class="mb-4">
+      <div class="disclaimer-banner d-flex align-items-start gap-2 shadow-sm">
+        <i class="bi bi-shield-exclamation fs-5 text-warning flex-shrink-0 mt-1"></i>
+        <div>
+          <strong>Academic Medical Disclaimer:</strong>
+          <span>LifeLink is a software prototype for connecting blood requesters with potential donors. Final donor eligibility, screening, and blood compatibility decisions must be made by authorized medical or blood-bank personnel.</span>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- ================================================================
+       Logout Confirmation Modal
+       ================================================================ -->
+  <div class="modal fade" id="logoutModal" tabindex="-1" aria-labelledby="logoutModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content">
+        <div class="modal-header bg-dark text-white">
+          <h5 class="modal-title" id="logoutModalLabel"><i class="bi bi-box-arrow-right text-danger me-2"></i>Confirm Logout</h5>
+          <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body py-4">
+          <p class="mb-0 fs-6">Are you sure you want to log out of your LifeLink session?</p>
+        </div>
+        <div class="modal-footer bg-light">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+          <button type="button" class="btn btn-danger fw-semibold" id="confirmLogoutBtn">Logout</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Footer -->
+  <footer class="py-3 text-center text-muted small">
+    <div class="container">
+      <p class="mb-1">&copy; 2026 LifeLink — Blood Donor Matching & Request Management System</p>
+      <p class="mb-0 text-secondary">Academic Capstone Prototype</p>
+    </div>
+  </footer>
+
+  <!-- Scripts -->
+  <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="../js/api.js"></script>
+  <script src="../js/auth.js"></script>
+  <script src="../js/dashboard.js"></script>
+</body>
+</html>

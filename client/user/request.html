@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Create a new blood request on LifeLink.">
+  <title>Request Blood — LifeLink</title>
+
+  <!-- Bootstrap 5 CSS CDN -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+  <!-- Bootstrap Icons CDN -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css" rel="stylesheet">
+  
+  <!-- LifeLink Custom Styles -->
+  <link rel="stylesheet" href="../css/style.css">
+  <link rel="stylesheet" href="../css/dashboard.css">
+</head>
+<body>
+
+  <!-- Navigation Bar -->
+  <nav class="navbar navbar-expand-lg navbar-dark bg-dark sticky-top shadow-sm">
+    <div class="container">
+      <a class="navbar-brand d-flex align-items-center" href="/user/dashboard.html">
+        <i class="bi bi-droplet-fill text-danger me-2 fs-4"></i>
+        <div>
+          <span class="logo-text text-white">LifeLink</span>
+          <span class="logo-subtitle text-muted">Blood Donor & Request Management</span>
+        </div>
+      </a>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarContent" aria-controls="navbarContent" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+
+      <div class="collapse navbar-collapse" id="navbarContent">
+        <ul class="navbar-nav me-auto mb-2 mb-lg-0 ms-lg-4">
+          <li class="nav-item">
+            <a class="nav-link" href="/user/dashboard.html"><i class="bi bi-speedometer2 me-1"></i> Dashboard</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="/user/requests.html"><i class="bi bi-list-task me-1"></i> My Requests</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="/user/centres.html"><i class="bi bi-hospital me-1"></i> Blood Centres</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="/user/appointments.html"><i class="bi bi-calendar-check me-1"></i> Appointments</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="/user/notifications.html"><i class="bi bi-bell me-1"></i> Notifications</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="/user/donor.html"><i class="bi bi-heart-pulse me-1"></i> Donor Profile</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="/user/profile.html"><i class="bi bi-person me-1"></i> Profile</a>
+          </li>
+        </ul>
+
+        <div class="d-flex align-items-center gap-3">
+          <a href="/user/dashboard.html" class="btn btn-outline-light btn-sm">
+            <i class="bi bi-arrow-left me-1"></i> Dashboard
+          </a>
+        </div>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Main Container -->
+  <main class="container my-5">
+    <div class="row justify-content-center">
+      <div class="col-lg-8">
+        
+        <!-- Header Banner -->
+        <div class="d-flex align-items-center justify-content-between mb-4">
+          <div>
+            <h1 class="h3 fw-bold mb-1 text-dark">
+              <i class="bi bi-plus-circle text-danger me-2"></i>Create Blood Request
+            </h1>
+            <p class="text-muted mb-0">Submit a blood request for yourself or a patient in need.</p>
+          </div>
+          <a href="/user/requests.html" class="btn btn-outline-secondary btn-sm">
+            <i class="bi bi-list-task me-1"></i> View My Requests
+          </a>
+        </div>
+
+        <!-- Alert Container -->
+        <div id="requestAlert"></div>
+
+        <!-- Request Form Card -->
+        <div class="card shadow-sm border-0">
+          <div class="card-header bg-white border-bottom py-3">
+            <h2 class="h5 fw-bold mb-0 text-dark">
+              <i class="bi bi-clipboard-pulse text-danger me-2"></i>Request Details
+            </h2>
+          </div>
+          
+          <div class="card-body p-4">
+            <form id="createRequestForm" novalidate>
+              <div class="alert alert-light border mb-4">
+                <h3 class="h6 fw-bold">Requester contact</h3>
+                <div class="row g-2">
+                  <div class="col-md-6"><label class="form-label">Full Name</label><input id="requesterName" class="form-control" readonly></div>
+                  <div class="col-md-6"><label class="form-label">Email</label><input id="requesterEmail" class="form-control" readonly></div>
+                  <div class="col-md-6"><label class="form-label">Mobile Number</label><input id="requesterPhone" class="form-control" type="tel"></div>
+                  <div class="col-md-6"><label class="form-label">Date of Birth / Age</label><input id="requesterDobAge" class="form-control" readonly></div>
+                </div>
+              </div>
+              
+              <div class="row g-3 mb-4">
+                
+                <!-- Blood Group -->
+                <div class="col-md-6">
+                  <label for="selectBloodGroup" class="form-label fw-semibold">Required Blood Group <span class="text-danger">*</span></label>
+                  <div class="input-group">
+                    <span class="input-group-text bg-light"><i class="bi bi-droplet-fill text-danger"></i></span>
+                    <select class="form-select" id="selectBloodGroup" required>
+                      <option value="" disabled selected>Select Required Blood Group</option>
+                      <option value="A+">A+</option>
+                      <option value="A-">A-</option>
+                      <option value="B+">B+</option>
+                      <option value="B-">B-</option>
+                      <option value="AB+">AB+</option>
+                      <option value="AB-">AB-</option>
+                      <option value="O+">O+</option>
+                      <option value="O-">O-</option>
+                    </select>
+                  </div>
+
+                  <div class="col-md-6">
+                    <label for="inputHospitalAddress" class="form-label fw-semibold">Hospital Address <span class="text-muted">(Optional)</span></label>
+                    <input type="text" class="form-control" id="inputHospitalAddress" maxlength="250" placeholder="Street or campus address">
+                  </div>
+                  <div class="col-md-4">
+                    <label for="inputRequestCity" class="form-label fw-semibold">City <span class="text-muted">(Optional)</span></label>
+                    <input type="text" class="form-control" id="inputRequestCity" maxlength="100">
+                  </div>
+                  <div class="col-md-4">
+                    <label for="inputRequestDistrict" class="form-label fw-semibold">District <span class="text-danger">*</span></label>
+                    <input type="text" class="form-control" id="inputRequestDistrict" maxlength="100" required>
+                  </div>
+                  <div class="col-md-4">
+                    <label for="inputRequestState" class="form-label fw-semibold">State <span class="text-danger">*</span></label>
+                    <input type="text" class="form-control" id="inputRequestState" value="Tamil Nadu" maxlength="100" required>
+                  </div>
+                  <div class="col-md-6">
+                    <label for="inputRequestPinCode" class="form-label fw-semibold">PIN Code <span class="text-muted">(Optional)</span></label>
+                    <input type="text" class="form-control" id="inputRequestPinCode" inputmode="numeric" maxlength="10">
+                  </div>
+                  <div class="col-md-6">
+                    <label for="inputRequestLandmark" class="form-label fw-semibold">Landmark <span class="text-muted">(Optional)</span></label>
+                    <input type="text" class="form-control" id="inputRequestLandmark" maxlength="200">
+                  </div>
+                  <div class="form-text">Specify the recipient's exact blood type.</div>
+                </div>
+
+                <!-- Units Required -->
+                <div class="col-md-6">
+                  <label for="inputUnitsRequired" class="form-label fw-semibold">Units Required <span class="text-danger">*</span></label>
+                  <div class="input-group">
+                    <span class="input-group-text bg-light"><i class="bi bi-box-seam"></i></span>
+                    <input type="number" class="form-control" id="inputUnitsRequired" value="1" min="1" max="20" required>
+                  </div>
+                  <div class="form-text">Number of blood units needed (1 to 20).</div>
+                </div>
+
+                <!-- Hospital Name -->
+                <div class="col-md-6">
+                  <label for="inputHospitalName" class="form-label fw-semibold">Hospital Name <span class="text-danger">*</span></label>
+                  <div class="input-group">
+                    <span class="input-group-text bg-light"><i class="bi bi-hospital"></i></span>
+                    <input type="text" class="form-control" id="inputHospitalName" placeholder="e.g., Apollo Hospital" required maxlength="150">
+                  </div>
+                  <div class="form-text">Hospital where the blood is required.</div>
+                </div>
+
+                <!-- Area / City -->
+                <div class="col-md-6">
+                  <label for="inputArea" class="form-label fw-semibold">Area / City <span class="text-danger">*</span></label>
+                  <div class="input-group">
+                    <span class="input-group-text bg-light"><i class="bi bi-geo-alt"></i></span>
+                    <input type="text" class="form-control" id="inputArea" placeholder="e.g., Chennai" required maxlength="100">
+                  </div>
+                  <div class="form-text">Approximate location or district for donor matching.</div>
+                </div>
+
+                <!-- Required Date -->
+                <div class="col-md-6">
+                  <label for="inputRequiredDate" class="form-label fw-semibold">Required Date <span class="text-danger">*</span></label>
+                  <div class="input-group">
+                    <span class="input-group-text bg-light"><i class="bi bi-calendar"></i></span>
+                    <input type="date" class="form-control" id="inputRequiredDate" required>
+                  </div>
+                  <div class="form-text">Date by which the blood is needed.</div>
+                </div>
+
+                <!-- Required Time -->
+                <div class="col-md-6">
+                  <label for="inputRequiredTime" class="form-label fw-semibold">Required Time <span class="text-danger">*</span></label>
+                  <div class="input-group">
+                    <span class="input-group-text bg-light"><i class="bi bi-clock"></i></span>
+                    <input type="time" class="form-control" id="inputRequiredTime" value="10:00" required>
+                  </div>
+                  <div class="form-text">Expected time of donation/transfusion.</div>
+                </div>
+
+                <!-- Priority Level -->
+                <div class="col-md-12">
+                  <label for="selectPriority" class="form-label fw-semibold">Priority Level <span class="text-danger">*</span></label>
+                  <div class="input-group">
+                    <span class="input-group-text bg-light"><i class="bi bi-exclamation-triangle"></i></span>
+                    <select class="form-select" id="selectPriority" required>
+                      <option value="NORMAL" selected>NORMAL — Standard requirement within a few days</option>
+                      <option value="URGENT">URGENT — Needed within 24 hours</option>
+                      <option value="EMERGENCY">EMERGENCY — Critical immediate requirement</option>
+                    </select>
+                  </div>
+                  <div class="form-text">Set priority level to help donors respond appropriately.</div>
+                </div>
+
+                <!-- Additional Information -->
+                <div class="col-md-12">
+                  <label for="inputAdditionalInfo" class="form-label fw-semibold">Additional Information <span class="text-muted">(Optional)</span></label>
+                  <textarea class="form-control" id="inputAdditionalInfo" rows="3" placeholder="e.g., Patient room number, contact person name, special instructions..." maxlength="500"></textarea>
+                  <div class="form-text">Any general non-sensitive instructions for donors.</div>
+                </div>
+
+              </div>
+
+              <!-- Action Buttons -->
+              <div class="d-flex flex-wrap align-items-center justify-content-between gap-2 border-top pt-3">
+                <a href="/user/dashboard.html" class="btn btn-outline-secondary">
+                  <i class="bi bi-arrow-left me-1"></i> Cancel & Back
+                </a>
+                <button type="submit" class="btn btn-danger fw-semibold px-4" id="submitRequestBtn">
+                  <i class="bi bi-send me-1"></i> Submit Blood Request
+                </button>
+              </div>
+
+            </form>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </main>
+
+  <!-- Footer -->
+  <footer class="py-3 text-center text-muted small mt-auto">
+    <div class="container">
+      <p class="mb-1">&copy; 2026 LifeLink — Blood Donor Matching & Request Management System</p>
+    </div>
+  </footer>
+
+  <!-- Scripts -->
+  <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="../js/api.js"></script>
+  <script src="../js/auth.js"></script>
+  <script src="../js/request.js"></script>
+</body>
+</html>

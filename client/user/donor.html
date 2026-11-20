@@ -1,0 +1,272 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Register or update your LifeLink blood donor profile.">
+  <title>Donate Blood — LifeLink</title>
+
+  <!-- Bootstrap 5 CSS CDN -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+  <!-- Bootstrap Icons CDN -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css" rel="stylesheet">
+  
+  <!-- LifeLink Custom Styles -->
+  <link rel="stylesheet" href="../css/style.css">
+  <link rel="stylesheet" href="../css/dashboard.css">
+</head>
+<body>
+
+  <!-- Navigation Bar -->
+  <nav class="navbar navbar-expand-lg navbar-dark bg-dark sticky-top shadow-sm">
+    <div class="container">
+      <a class="navbar-brand d-flex align-items-center" href="/user/dashboard.html">
+        <i class="bi bi-droplet-fill text-danger me-2 fs-4"></i>
+        <div>
+          <span class="logo-text text-white">LifeLink</span>
+          <span class="logo-subtitle text-muted">Blood Donor & Request Management</span>
+        </div>
+      </a>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarContent" aria-controls="navbarContent" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+
+      <div class="collapse navbar-collapse" id="navbarContent">
+        <ul class="navbar-nav me-auto mb-2 mb-lg-0 ms-lg-4">
+          <li class="nav-item">
+            <a class="nav-link" href="/user/dashboard.html"><i class="bi bi-speedometer2 me-1"></i> Dashboard</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="/user/centres.html"><i class="bi bi-hospital me-1"></i> Blood Centres</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="/user/appointments.html"><i class="bi bi-calendar-check me-1"></i> Appointments</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="/user/requests.html"><i class="bi bi-list-task me-1"></i> Requests</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="/user/notifications.html"><i class="bi bi-bell me-1"></i> Notifications</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="/user/profile.html"><i class="bi bi-person me-1"></i> Profile</a>
+          </li>
+        </ul>
+
+        <div class="d-flex align-items-center gap-3">
+          <a href="/user/dashboard.html" class="btn btn-outline-light btn-sm">
+            <i class="bi bi-arrow-left me-1"></i> Dashboard
+          </a>
+        </div>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Main Container -->
+  <main class="container my-5">
+    <div class="row justify-content-center">
+      <div class="col-lg-8">
+        
+        <!-- Header Banner -->
+        <div class="d-flex align-items-center justify-content-between mb-4">
+          <div>
+            <h1 class="h3 fw-bold mb-1 text-dark" id="donorFormTitle">
+              <i class="bi bi-heart-pulse text-danger me-2"></i>Donate Blood — Donor Profile
+            </h1>
+            <p class="text-muted mb-0">Register as a potential blood donor and save lives.</p>
+          </div>
+          <a href="/user/dashboard.html" class="btn btn-outline-secondary btn-sm">
+            <i class="bi bi-house me-1"></i> Dashboard
+          </a>
+        </div>
+
+        <!-- Alert Container -->
+        <div id="donorAlert"></div>
+
+        <!-- Loading Spinner -->
+        <div id="donorLoadingSpinner" class="text-center py-5">
+          <div class="spinner-border text-danger" role="status">
+            <span class="visually-hidden">Loading donor profile...</span>
+          </div>
+          <p class="text-muted mt-2 small">Checking donor profile status...</p>
+        </div>
+
+        <!-- Donor Profile Form Card -->
+        <div id="donorCardContent" class="card shadow-sm border-0 d-none">
+          <div class="card-header bg-white border-bottom py-3 d-flex justify-content-between align-items-center">
+            <h2 class="h5 fw-bold mb-0 text-dark">
+              <i class="bi bi-clipboard2-pulse text-danger me-2"></i>Donor Registration Information
+            </h2>
+            <div>
+              <span class="text-muted small me-2">Verification Status:</span>
+              <span class="badge bg-warning text-dark fs-6" id="verificationStatusBadge">PENDING</span>
+            </div>
+          </div>
+          
+          <div class="card-body p-4">
+            <form id="donorForm" novalidate>
+              <div class="row g-3 mb-4">
+                <div class="col-md-6">
+                  <label for="inputDonorName" class="form-label fw-semibold">Full Name <span class="text-danger">*</span></label>
+                  <input type="text" class="form-control" id="inputDonorName" required maxlength="100">
+                </div>
+                <div class="col-md-6">
+                  <label for="inputDonorEmail" class="form-label fw-semibold">Email Address <span class="text-danger">*</span></label>
+                  <input type="email" class="form-control bg-light" id="inputDonorEmail" readonly required>
+                </div>
+                <div class="col-md-6">
+                  <label for="inputDonorPhone" class="form-label fw-semibold">Mobile Number <span class="text-danger">*</span></label>
+                  <input type="tel" class="form-control" id="inputDonorPhone" required>
+                </div>
+                <div class="col-md-6">
+                  <label for="inputDonorDob" class="form-label fw-semibold">Date of Birth <span class="text-danger">*</span></label>
+                  <input type="date" class="form-control" id="inputDonorDob" required readonly>
+                  <div class="form-text" id="donorAgeText"></div>
+                </div>
+                <div class="col-md-6">
+                  <label for="inputDonorPhoto" class="form-label fw-semibold">Profile Photo <span class="text-muted">(Optional)</span></label>
+                  <input type="file" class="form-control" id="inputDonorPhoto" accept="image/jpeg,image/png,image/webp">
+                  <div class="form-text">JPG, PNG, or WebP up to 5 MB.</div>
+                  <img id="donorPhotoPreview" class="rounded-circle mt-2 d-none" width="72" height="72" alt="Profile preview">
+                </div>
+                <div class="col-12">
+                  <label class="form-label fw-semibold">Residential Address <span class="text-danger">*</span></label>
+                  <div class="row g-2">
+                    <div class="col-md-6"><input class="form-control" id="inputDonorStreet" placeholder="Street / locality" required></div>
+                    <div class="col-md-6"><input class="form-control" id="inputDonorCity" placeholder="City" required></div>
+                    <div class="col-md-4"><input class="form-control" id="inputDonorDistrict" placeholder="District" required></div>
+                    <div class="col-md-4"><input class="form-control" id="inputDonorState" value="Tamil Nadu" placeholder="State" required></div>
+                    <div class="col-md-4"><input class="form-control" id="inputDonorPinCode" placeholder="PIN code" inputmode="numeric" required></div>
+                  </div>
+                  <div class="form-text">Your full address is private and is not shown in donor matching.</div>
+                </div>
+              </div>
+              
+              <div class="row g-3 mb-4">
+                
+                <!-- Blood Group Dropdown -->
+                <div class="col-md-6">
+                  <label for="selectBloodGroup" class="form-label fw-semibold">Blood Group <span class="text-danger">*</span></label>
+                  <div class="input-group">
+                    <span class="input-group-text bg-light"><i class="bi bi-droplet-fill text-danger"></i></span>
+                    <select class="form-select" id="selectBloodGroup" required>
+                      <option value="" disabled selected>Select Blood Group</option>
+                      <option value="A+">A+</option>
+                      <option value="A-">A-</option>
+                      <option value="B+">B+</option>
+                      <option value="B-">B-</option>
+                      <option value="AB+">AB+</option>
+                      <option value="AB-">AB-</option>
+                      <option value="O+">O+</option>
+                      <option value="O-">O-</option>
+                    </select>
+                  </div>
+                  <div class="form-text">Select your verified ABO & Rh blood group.</div>
+                </div>
+
+                <!-- Availability Toggle -->
+                <div class="col-md-6">
+                  <label for="availabilityToggle" class="form-label fw-semibold">Availability Status <span class="text-danger">*</span></label>
+                  <div class="form-check form-switch border rounded-3 px-3 py-2 d-flex align-items-center gap-3">
+                    <input class="form-check-input ms-0 mt-0" type="checkbox" role="switch" id="availabilityToggle" checked>
+                    <label class="form-check-label fw-semibold mb-0" for="availabilityToggle">
+                      <span id="availabilityToggleLabel">ON - Ready to donate</span>
+                    </label>
+                  </div>
+                  <div class="form-text">Turn OFF if you recently donated or are temporarily unavailable.</div>
+                </div>
+
+                <!-- Area / City -->
+                <div class="col-md-6">
+                  <label for="inputArea" class="form-label fw-semibold">Area / City <span class="text-danger">*</span></label>
+                  <div class="input-group">
+                    <span class="input-group-text bg-light"><i class="bi bi-geo-alt"></i></span>
+                    <input type="text" class="form-control" id="inputArea" placeholder="e.g., Chennai" required maxlength="100">
+                  </div>
+                  <div class="form-text">General location for local donor matching (no exact address needed).</div>
+                </div>
+
+                <!-- Last Donation Date -->
+                <div class="col-md-6">
+                  <label for="inputLastDonationDate" class="form-label fw-semibold">Last Donation Date <span class="text-muted">(Optional)</span></label>
+                  <div class="input-group">
+                    <span class="input-group-text bg-light"><i class="bi bi-calendar"></i></span>
+                    <input type="date" class="form-control" id="inputLastDonationDate">
+                  </div>
+                  <div class="form-text">Leave blank if you have never donated blood before.</div>
+                </div>
+
+              </div>
+
+              <div class="card border border-danger-subtle bg-light-subtle mb-4">
+                <div class="card-body">
+                  <h3 class="h6 fw-bold mb-3"><i class="bi bi-shield-check text-danger me-2"></i>Donor Commitment</h3>
+                  <div class="form-check mb-3">
+                    <input class="form-check-input" type="checkbox" id="interestedInDonation">
+                    <label class="form-check-label fw-semibold" for="interestedInDonation">
+                      I am interested in donating blood through LifeLink.
+                    </label>
+                    <div class="form-text">Your profile may be shown as a potential match only after verification.</div>
+                  </div>
+                  <div class="form-check">
+                    <input class="form-check-input" type="checkbox" id="termsAccepted" required>
+                    <label class="form-check-label" for="termsAccepted">
+                      I agree to the <a href="#donorTerms" data-bs-toggle="collapse">donor terms and conditions</a>.
+                    </label>
+                  </div>
+                  <div class="collapse mt-3" id="donorTerms">
+                    <div class="small text-muted border-top pt-3">
+                      LifeLink only connects potential donors and requesters. Donation eligibility, medical screening,
+                      compatibility, and final donation decisions must be confirmed by qualified medical personnel.
+                      You agree to provide accurate information and update your availability when it changes.
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Read-only Notice regarding Verification Status -->
+              <div class="alert alert-light border d-flex align-items-center gap-2 mb-4 py-2 px-3">
+                <i class="bi bi-shield-lock text-muted fs-5"></i>
+                <div class="small text-muted">
+                  <strong>Admin Verification Notice:</strong> Verification status is managed exclusively by the LifeLink administrator. Initial donor registration is marked as <code>PENDING</code>.
+                </div>
+              </div>
+
+              <!-- Action Buttons -->
+              <div class="d-flex flex-wrap align-items-center justify-content-between gap-2 border-top pt-3">
+                <div class="d-flex gap-2">
+                  <a href="/user/dashboard.html" class="btn btn-outline-secondary">
+                    <i class="bi bi-arrow-left me-1"></i> Dashboard
+                  </a>
+                  <a href="/user/profile.html" class="btn btn-outline-danger">
+                    <i class="bi bi-person me-1"></i> View Profile
+                  </a>
+                </div>
+                <button type="submit" class="btn btn-success fw-semibold px-4" id="submitDonorBtn">
+                  <i class="bi bi-check-circle me-1"></i> Save Donor Profile
+                </button>
+              </div>
+
+            </form>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </main>
+
+  <!-- Footer -->
+  <footer class="py-3 text-center text-muted small mt-auto">
+    <div class="container">
+      <p class="mb-1">&copy; 2026 LifeLink — Blood Donor Matching & Request Management System</p>
+    </div>
+  </footer>
+
+  <!-- Scripts -->
+  <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="../js/api.js"></script>
+  <script src="../js/auth.js"></script>
+  <script src="../js/donor.js"></script>
+</body>
+</html>

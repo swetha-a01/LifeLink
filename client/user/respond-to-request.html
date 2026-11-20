@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Respond to Blood Request — LifeLink</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css" rel="stylesheet">
+  <link rel="stylesheet" href="../css/style.css">
+</head>
+<body>
+  <main class="container py-5" style="max-width: 760px">
+    <div class="text-center mb-4">
+      <a href="/" class="text-decoration-none">
+        <h1 class="fw-bold text-danger"><i class="bi bi-droplet-fill me-2"></i>LifeLink</h1>
+      </a>
+      <p class="text-muted">Respond to your blood donation match</p>
+    </div>
+
+    <div id="actionAlert"></div>
+    <div id="actionLoading" class="card border-0 shadow-sm text-center p-5">
+      <div class="spinner-border text-danger" role="status"></div>
+      <p class="text-muted mt-3 mb-0">Verifying your secure email link...</p>
+    </div>
+
+    <section id="requestCard" class="card border-0 shadow-sm d-none">
+      <div class="card-body p-4">
+        <div class="d-flex justify-content-between align-items-start gap-3 mb-3">
+          <div>
+            <h2 class="h4 mb-1">Blood request details</h2>
+            <p class="text-muted mb-0">Review the request before responding.</p>
+          </div>
+          <span id="priorityBadge" class="badge"></span>
+        </div>
+        <div class="row g-3 small">
+          <div class="col-sm-6"><strong>Blood group:</strong> <span id="bloodGroup"></span></div>
+          <div class="col-sm-6"><strong>Units required:</strong> <span id="unitsRequired"></span></div>
+          <div class="col-sm-6"><strong>Hospital:</strong> <span id="hospitalName"></span></div>
+          <div class="col-sm-6"><strong>Location:</strong> <span id="area"></span></div>
+          <div class="col-sm-6"><strong>Required date:</strong> <span id="requiredDate"></span></div>
+          <div class="col-sm-6"><strong>Required time:</strong> <span id="requiredTime"></span></div>
+          <div class="col-12"><strong>Request status:</strong> <span id="requestStatus"></span></div>
+        </div>
+        <hr>
+        <div id="authNotice" class="alert alert-warning d-none"></div>
+        <div id="actionButtons" class="d-flex flex-wrap gap-2 d-none">
+          <button id="acceptBtn" class="btn btn-success"><i class="bi bi-check-circle me-1"></i> Accept request</button>
+          <button id="rejectBtn" class="btn btn-outline-danger"><i class="bi bi-x-circle me-1"></i> Reject request</button>
+        </div>
+        <div id="loginAction" class="d-none">
+          <a id="loginActionLink" class="btn btn-danger" href="/login.html">Sign in to respond</a>
+        </div>
+        <div id="switchAccountAction" class="d-none">
+          <button id="switchAccountBtn" class="btn btn-outline-danger">Log out and switch account</button>
+        </div>
+      </div>
+    </section>
+  </main>
+  <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+  <script src="/js/api.js"></script>
+  <script src="/js/auth.js"></script>
+  <script src="/js/respond-to-request.js"></script>
+</body>
+</html>

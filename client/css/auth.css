@@ -1,0 +1,128 @@
+/* LifeLink authentication surfaces. */
+.auth-page {
+  align-items: center;
+  background:
+    radial-gradient(circle at 10% 10%, rgba(190, 82, 110, 0.12), transparent 32%),
+    var(--ll-background);
+  display: flex;
+  justify-content: center;
+  min-height: 100vh;
+  padding: 2rem 1rem;
+}
+
+.auth-container {
+  width: 100%;
+  max-width: 460px;
+}
+
+.auth-brand {
+  margin-bottom: 1.5rem;
+  text-align: center;
+}
+
+.brand-logo {
+  color: var(--ll-burgundy);
+  font-size: 2rem;
+  font-weight: 700;
+  letter-spacing: -0.03em;
+}
+
+.brand-logo a,
+.auth-brand a {
+  color: var(--ll-burgundy);
+}
+
+.brand-tagline {
+  color: var(--ll-text-secondary);
+  font-size: 0.9rem;
+  margin: 0;
+}
+
+.auth-card {
+  padding: 2rem;
+  background: var(--ll-surface);
+  border: 1px solid var(--ll-border);
+  border-radius: var(--ll-radius-lg);
+  box-shadow: 0 12px 35px rgba(70, 25, 43, 0.08);
+}
+
+.auth-title {
+  color: var(--ll-text);
+  font-size: 1.55rem;
+  font-weight: 700;
+  margin-bottom: 0.25rem;
+}
+
+.auth-subtitle {
+  color: var(--ll-text-secondary);
+  margin-bottom: 1.5rem;
+}
+
+.auth-card .form-label {
+  margin-bottom: 0.4rem;
+}
+
+.auth-card .input-group-text {
+  border-radius: var(--ll-radius-sm) 0 0 var(--ll-radius-sm);
+}
+
+.auth-card .input-group .form-control {
+  border-radius: 0;
+}
+
+.auth-card .input-group .form-control:last-child,
+.auth-card .toggle-password {
+  border-radius: 0 var(--ll-radius-sm) var(--ll-radius-sm) 0;
+}
+
+.toggle-password {
+  border: 1px solid var(--ll-border);
+  border-left: 0;
+  background: #fff5f7;
+  color: var(--ll-text-secondary);
+}
+
+.toggle-password:hover {
+  color: var(--ll-burgundy);
+}
+
+.btn-auth {
+  min-height: 46px;
+}
+
+.auth-footer {
+  margin-top: 1.25rem;
+  padding-top: 1rem;
+  border-top: 1px solid var(--ll-border);
+  text-align: center;
+}
+
+.auth-footer p {
+  color: var(--ll-text-secondary);
+  margin: 0;
+}
+
+.auth-footer a {
+  color: var(--ll-burgundy);
+  font-weight: 600;
+}
+
+.password-requirements {
+  color: var(--ll-text-secondary);
+  font-size: 0.78rem;
+}
+
+.auth-card .alert {
+  border-radius: var(--ll-radius-sm);
+  font-size: 0.875rem;
+}
+
+@media (max-width: 576px) {
+  .auth-page {
+    padding: 1rem 0.75rem;
+  }
+
+  .auth-card {
+    padding: 1.35rem;
+  }
+}
