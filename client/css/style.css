@@ -52,6 +52,30 @@ body {
   line-height: 1.55;
 }
 
+img,
+svg,
+video,
+canvas {
+  max-width: 100%;
+  height: auto;
+}
+
+.container,
+.container-fluid,
+main {
+  min-width: 0;
+}
+
+.table-responsive,
+.table {
+  max-width: 100%;
+}
+
+.table-responsive {
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
 body.logging-out {
   overflow: hidden;
 }
@@ -652,12 +676,14 @@ footer {
     top: 0;
     bottom: auto;
     width: 100%;
+    height: auto;
     min-height: var(--ll-topbar-height);
     padding: 0.55rem 0;
     align-items: center;
     border-right: 0;
     border-bottom: 1px solid var(--ll-border);
-    overflow: visible;
+    overflow-x: visible;
+    overflow-y: visible;
   }
 
   .navbar .container {

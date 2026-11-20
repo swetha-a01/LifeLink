@@ -204,44 +204,45 @@ function loadUserRequestsSummary() {
         });
       }
 
-      function loadEmergencyRequestsSummary() {
-        var container = $('#dashboardEmergencyRequests');
-        if (!container.length) return;
-
-        LifeLinkAPI.get('/requests/emergency/all')
-          .then(function (response) {
-            var requests = response && response.data && response.data.requests
-              ? response.data.requests
-              : [];
-
-            if (!requests.length) {
-              container.html('<div class="col-12"><div class="card p-4 text-center text-muted">No active emergency requests.</div></div>');
-              return;
-            }
-
-            container.html(requests.slice(0, 3).map(function (request) {
-              var priorityClass = request.priority === 'EMERGENCY' ? 'bg-danger' : 'bg-warning text-dark';
-              var date = request.requiredDate
-                ? new Date(request.requiredDate).toLocaleDateString()
-                : 'Date unavailable';
-              return '<div class="col-md-4"><div class="card emergency-card h-100 shadow-sm"><div class="card-body">' +
-                '<div class="d-flex justify-content-between align-items-center mb-2">' +
-                '<span class="badge bg-danger fs-6 px-3 py-2">' + escapeHtml(request.bloodGroup) + '</span>' +
-                '<span class="badge ' + priorityClass + '">' + escapeHtml(request.priority) + '</span></div>' +
-                '<h5 class="card-title h6 fw-bold text-dark mb-1">' + escapeHtml(request.hospitalName) + '</h5>' +
-                '<p class="card-text text-muted small mb-2"><i class="bi bi-geo-alt me-1"></i>' + escapeHtml(request.area) + '</p>' +
-                '<div class="border-top pt-2 mt-2 d-flex justify-content-between small text-secondary">' +
-                '<span>Required: ' + escapeHtml(date) + '</span><span class="text-danger fw-semibold">Status: Searching</span>' +
-                '</div></div></div></div>';
-            }).join(''));
-          })
-          .catch(function () {
-            container.html('<div class="col-12"><div class="alert alert-warning mb-0">Emergency requests are temporarily unavailable.</div></div>');
-          });
-      }
     })
     .catch(function (error) {
       console.warn('Could not fetch user requests summary:', error);
+    });
+}
+
+function loadEmergencyRequestsSummary() {
+  var container = $('#dashboardEmergencyRequests');
+  if (!container.length) return;
+
+  LifeLinkAPI.get('/requests/emergency/all')
+    .then(function (response) {
+      var requests = response && response.data && response.data.requests
+        ? response.data.requests
+        : [];
+
+      if (!requests.length) {
+        container.html('<div class="col-12"><div class="card p-4 text-center text-muted">No active emergency requests.</div></div>');
+        return;
+      }
+
+      container.html(requests.slice(0, 3).map(function (request) {
+        var priorityClass = request.priority === 'EMERGENCY' ? 'bg-danger' : 'bg-warning text-dark';
+        var date = request.requiredDate
+          ? new Date(request.requiredDate).toLocaleDateString()
+          : 'Date unavailable';
+        return '<div class="col-md-4"><div class="card emergency-card h-100 shadow-sm"><div class="card-body">' +
+          '<div class="d-flex justify-content-between align-items-center mb-2">' +
+          '<span class="badge bg-danger fs-6 px-3 py-2">' + escapeHtml(request.bloodGroup) + '</span>' +
+          '<span class="badge ' + priorityClass + '">' + escapeHtml(request.priority) + '</span></div>' +
+          '<h5 class="card-title h6 fw-bold text-dark mb-1">' + escapeHtml(request.hospitalName) + '</h5>' +
+          '<p class="card-text text-muted small mb-2"><i class="bi bi-geo-alt me-1"></i>' + escapeHtml(request.area) + '</p>' +
+          '<div class="border-top pt-2 mt-2 d-flex justify-content-between small text-secondary">' +
+          '<span>Required: ' + escapeHtml(date) + '</span><span class="text-danger fw-semibold">Status: Searching</span>' +
+          '</div></div></div></div>';
+      }).join(''));
+    })
+    .catch(function () {
+      container.html('<div class="col-12"><div class="alert alert-warning mb-0">Emergency requests are temporarily unavailable.</div></div>');
     });
 }
 
