@@ -41,44 +41,44 @@ LifeLink addresses these challenges through a unified platform featuring automat
 
 ## 4. Key Features & Completed Modules
 
-### Authentication & Account Security (Phases 1 & 2)
+### Authentication & Account Security 
 - Secure registration and login with bcryptjs password hashing.
 - Stateless JWT issuance with configurable expiry (`JWT_EXPIRES_IN`).
 - Server-side rate limiting on `/api/*` endpoints to thwart brute-force attacks.
 - Secure HTTP headers via Helmet and CORS configuration.
 
-### User & Donor Profiles (Phases 3 & 4)
+### User & Donor Profiles
 - Comprehensive user dashboard with statistics and quick navigation.
 - Dedicated Donor Profile registration (Blood Group, Area, City, Availability status).
 - 90-day donation cooldown eligibility validation (`isDonorEligible`).
 
-### Blood Request Management (Phase 5)
+### Blood Request Management
 - Requesters can post normal, urgent, or emergency blood requests.
 - Requesters can view historical requests and safely cancel active requests.
 
-### Donor Matching Engine & Response Flow (Phases 6 & 7)
+### Donor Matching Engine & Response Flow 
 - Automated rule-based matching algorithm evaluating blood group, availability, verified status, and location.
 - Matched donors can review request details and either ACCEPT or REJECT.
 - Rejection of response to cancelled or completed requests; non-matched donor response prevention.
 
-### In-App Notifications & Emergency Alerts (Phase 8)
+### In-App Notifications & Emergency Alerts 
 - Real-time in-app notification center for request updates, matches, approvals, and appointments.
 - Unread counter in navigation bar with mark-as-read functionality.
 - Anti-spam deduplication logic preventing redundant notifications.
 
-### Admin Portal & Verification System (Phase 9)
+### Admin Portal & Verification System 
 - Dedicated Administrator Dashboard (`/admin/dashboard.html`) restricted by `adminOnly` middleware.
 - Metrics overview (Users, Pending Donors, Verified Donors, Active Requests).
 - Admin verification workflow for voluntary donors (`VERIFY`, `REJECT`, `SUSPEND`).
 - User account status management (suspending/reactivating accounts; self-deactivation protection).
 
-### Blood Donation Centres Directory (Phase 10 — Part A & D)
+### Blood Donation Centres Directory
 - MongoDB-backed directory of blood donation centres.
 - Filtering by city and area.
 - Responsive centre cards with location, contact info, operating hours, and supported blood groups.
 - Repeatable, idempotent seed script (`server/utils/seedCentres.js`).
 
-### Donation Appointment Scheduling (Phase 10 — Part B, E, F & G)
+### Donation Appointment Scheduling 
 - Verified and available voluntary donors can schedule appointments at active centres.
 - Past-date rejection and strict 24-hour time validation (`HH:MM`).
 - Conflict detection preventing double-booking by the same donor on the same date/time.
@@ -263,13 +263,13 @@ http://localhost:5000
 | `GET` | `/api/notifications` | JWT | List notifications for authenticated user |
 | `PATCH` | `/api/notifications/:id/read` | JWT | Mark a notification as read |
 
-### Blood Donation Centres (Phase 10)
+### Blood Donation Centres
 | Method | Path | Auth | Description |
 | :--- | :--- | :--- | :--- |
 | `GET` | `/api/centres` | JWT | List all active blood donation centres (supports `?city=`) |
 | `GET` | `/api/centres/:id` | JWT | Get specific active centre details |
 
-### Appointments Management (Phase 10)
+### Appointments Management 
 | Method | Path | Auth | Description |
 | :--- | :--- | :--- | :--- |
 | `POST` | `/api/appointments` | JWT | Book donation appointment (verified donors only) |
@@ -277,7 +277,7 @@ http://localhost:5000
 | `GET` | `/api/appointments/:id` | JWT | Get details of a specific appointment (owner only) |
 | `PATCH` | `/api/appointments/:id/cancel` | JWT | Cancel an appointment (owner only) |
 
-### Administrator Endpoints (Phase 9 & 10)
+### Administrator Endpoints 
 | Method | Path | Auth | Description |
 | :--- | :--- | :--- | :--- |
 | `GET` | `/api/admin/dashboard` | JWT + ADMIN | Platform statistics & system overview metrics |
@@ -302,11 +302,11 @@ npm test
 *(Or run `node scratch/run_tests.js`)*
 
 ### Current Test Suite Results
-- **Phase 6 Tests (Blood Requests & Cancellation)**: 8/8 PASS
-- **Phase 7 Tests (Donor Response & Flow)**: 10/10 PASS
-- **Phase 8 Tests (Notifications & Emergency Alerts)**: 12/12 PASS
-- **Phase 9 Tests (Admin Portal & Donor Verification)**: 18/18 PASS
-- **Phase 10 Tests (Centres, Appointments & Security)**: 23/23 PASS
+- **Tests Blood Requests & Cancellation**: 8/8 PASS
+- **Tests Donor Response & Flow**: 10/10 PASS
+- **Tests Notifications & Emergency Alerts**: 12/12 PASS
+- **Tests Admin Portal & Donor Verification**: 18/18 PASS
+- **Tests Centres, Appointments & Security**: 23/23 PASS
 - **Total Tests Executed**: 71
 - **Passed**: 71 (100%)
 - **Failed**: 0
